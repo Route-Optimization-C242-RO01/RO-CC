@@ -1,5 +1,4 @@
 //list logic controller
-const { where } = require('sequelize');
 const { User } = require('../models');
 
 

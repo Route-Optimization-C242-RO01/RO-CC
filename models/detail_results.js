@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Detail_results.belongsTo(models.Results, {
         foreignKey: 'id_results',
-        as: 'dataDetailResults',
+        as: 'data_results',
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE'
       });

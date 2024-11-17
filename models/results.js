@@ -12,14 +12,14 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Results.hasMany(models.Detail_results, {
         foreignKey: 'id_results',
-        as: 'dataResults', 
+        as: 'data_detail_results', 
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE'
       });
 
       Results.belongsTo(models.Destination, {
         foreignKey: 'id_destination',
-        as: 'dataDestinationResults',
+        as: 'data_destination_results',
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE'
       });

@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Detail_destination.belongsTo(models.Destination, {
         foreignKey: 'id_destination',
-        as: 'dataDetailDestination',
+        as: 'data_destination',
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE'
       });

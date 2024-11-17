@@ -28,6 +28,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(256),
       allowNull: false,
     },
+    expires_at: {  
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: () => new Date(new Date().getTime() + (7 * 24 * 60 * 60 * 1000))
+    },
   }, {
     sequelize,
     modelName: 'Token_user',

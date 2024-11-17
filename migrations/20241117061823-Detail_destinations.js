@@ -1,7 +1,8 @@
 'use strict';
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
+  async up (queryInterface, Sequelize) {
     await queryInterface.createTable('Detail_destinations', {
       id_detail_destination: {
         type: Sequelize.UUID,
@@ -30,7 +31,7 @@ module.exports = {
         allowNull: false,
       },
       kg: {
-        type: Sequelize.INTEGER(5),
+        type: Sequelize.DECIMAL(10,8),
         allowNull: false,
       },
       createdAt: {
@@ -45,7 +46,8 @@ module.exports = {
       }
     });
   },
-  async down(queryInterface, Sequelize) {
+
+  async down (queryInterface, Sequelize) {
     await queryInterface.dropTable('Detail_destinations');
   }
 };

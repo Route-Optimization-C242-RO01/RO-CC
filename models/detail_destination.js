@@ -41,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     kg: {
-      type: DataTypes.INTEGER(5),
+      type: DataTypes.DECIMAL(10,8),
       allowNull: false,
     }
   }, {

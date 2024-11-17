@@ -1,6 +1,6 @@
-//list destination not done
 //add destination
-//update destination done
-//list destination done
+//list destination unfinished
+//update destination to finished
+//list destination finished
 
 module.exports = {}

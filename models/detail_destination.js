@@ -10,7 +10,12 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Detail_destination.belongsTo(models.Destination, {
+        foreignKey: 'id_destination',
+        as: 'dataDetailDestination',
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
+      });
     }
   }
   Detail_destination.init({

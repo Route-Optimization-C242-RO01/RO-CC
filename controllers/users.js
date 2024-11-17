@@ -1,5 +1,5 @@
 
-const { User } = require('../models');
+const { User, sequelize } = require('../models');
 
 //testing
 const testingUser = async (req,res) => {
@@ -24,5 +24,6 @@ const register = async (req,res) => {
 }
 //login
 //logout
+
 
 module.exports = {testingUser}

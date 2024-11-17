@@ -10,7 +10,26 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Destination.hasMany(models.Detail_destination, {
+        foreignKey: 'id_destination',
+        as: 'dataDestination', 
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
+      });
+
+      Destination.hasMany(models.Results, {
+        foreignKey: 'id_destination',
+        as: 'dataResultsDestination', 
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
+      });
+
+      Destination.belongsTo(models.User, {
+        foreignKey: 'id_user',
+        as: 'dataUserDestination',
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
+      });
     }
   }
   Destination.init({
@@ -19,7 +38,11 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       allowNull: false,
       defaultValue: DataTypes.UUIDV4
-    }
+    },
+    id_user: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
   }, {
     sequelize,
     modelName: 'Destination',

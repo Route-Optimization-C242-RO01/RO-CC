@@ -10,7 +10,19 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      User.hasMany(models.Token_user, {
+        foreignKey: 'id_user',
+        as: 'tokenUser', 
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
+      });
+
+      User.hasMany(models.Destination, {
+        foreignKey: 'id_user',
+        as: 'dataDestinationUser', 
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
+      });
     }
   }
   User.init({

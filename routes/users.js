@@ -1,9 +1,10 @@
 const express = require('express')
 const router = express.Router()
 const controllers = require('../controllers/users')
+const middleware = require('../middleware/authentication')
 
-//list router
-router.get('/testing-user', controllers.testingUser)
+router.post('/user', controllers.register)
+router.post('/login', controllers.login)
 
 
 module.exports = router;

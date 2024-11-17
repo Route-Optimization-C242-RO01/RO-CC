@@ -1,0 +1,3 @@
+//optimasi rute
+
+module.exports = {}

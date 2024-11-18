@@ -7,7 +7,6 @@ const {
 } = require("../models");
 const { route } = require("../routes/users");
 
-//add destination
 //list destination unfinished
 const getAllUnFinish = async (req, res) => {
   try {

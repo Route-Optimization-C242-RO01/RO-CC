@@ -92,7 +92,9 @@ const login = async (req, res) => {
 const logout = async (req, res) => {
   try {
     if (!req.user) {
-      return res.status(400).json({ message: "User not authenticated" });
+      return res
+        .status(400)
+        .json({ success: false, message: "User not authenticated" });
     }
 
     // Find and delete the token
@@ -100,14 +102,16 @@ const logout = async (req, res) => {
     const tokenRecord = await Token_user.findOne({ where: { token } });
 
     if (!tokenRecord) {
-      return res.status(404).json({ message: "Token not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Token not found" });
     }
 
     await tokenRecord.destroy();
-    res.json({ message: "Logout Success" });
+    res.status(200).json({ success: true, message: "Logout Success" });
   } catch (error) {
     console.error("Logout error:", error); // Log the error
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 

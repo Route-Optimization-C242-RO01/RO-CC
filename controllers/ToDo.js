@@ -65,7 +65,7 @@ const getAllUnFinish = async (req, res) => {
 //update destination to finished
 const updateToFinished = async (req, res) => {
   try {
-    const { id_results } = req.body; // Assuming you'll send the id_results in the request body
+    const { id_results } = req.params; 
     const id_user = req.user.id_user;
 
     // Cek apakah results ada dan milik user yang sedang login
@@ -111,7 +111,7 @@ const updateToFinished = async (req, res) => {
     );
 
     // Cek apakah update berhasil
-    if (updatedResult[0] > 0) {
+    if (updatedResult) {
       return res.status(200).json({
         success: true,
         message: "Results updated to finished successfully",

@@ -7,7 +7,7 @@ router.get("/unfinished", middleware.verifyToken, controllers.getAllUnFinish);
 
 // Update destination to finished
 router.put(
-  "/updatetofinished",
+  "/updatetofinished/:id_results",
   middleware.verifyToken,
   controllers.updateToFinished
 );

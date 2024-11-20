@@ -64,7 +64,7 @@ const getAllUnFinish = async (req, res) => {
 //update destination to finished
 const updateToFinished = async (req, res) => {
   try {
-    const { id_results } = req.params; 
+    const { id_results } = req.params;
     const id_user = req.user.id_user;
 
     // Cek apakah results ada dan milik user yang sedang login
@@ -173,6 +173,7 @@ const getfinishhistory = async (req, res) => {
       order: [["updatedAt", "DESC"]], // Optional: sort by latest finished first
     });
 
+    // Cek apakah update berhasil
     if (getFinished.length > 0) {
       return res.status(200).json({
         success: true,
@@ -180,7 +181,6 @@ const getfinishhistory = async (req, res) => {
         data: getFinished,
       });
     }
-
     return res.status(400).json({
       success: false,
       message: "No finished destinations found",

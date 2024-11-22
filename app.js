@@ -24,14 +24,20 @@ app.use(function(req, res, next) {
 });
 
 // error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
+app.use(function (err, req, res, next) {
+  // Set locals, hanya memberikan error di development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
+  // Log error hanya di production
+  if (req.app.get('env') === 'production') {
+      console.error(err.stack);
+  }
+
+  // Render halaman error
   res.status(err.status || 500);
   res.render('error');
 });
+
 
 module.exports = app;

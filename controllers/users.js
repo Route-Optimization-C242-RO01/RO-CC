@@ -5,25 +5,36 @@ const bcrypt = require("bcrypt");
 //register
 const register = async (req, res) => {
   try {
+    //mengambil inputan user
     const { name, password, retype_pass } = req.body;
+
+    //validasi inputan jika tidak diisikan
     if (!name || !password || !retype_pass) {
       return res
         .status(400)
         .json({ success: false, message: "Complete your account data" });
     }
+
+    //validasi jika password, dengan konfirmasi password tidak sama
     if (password != retype_pass) {
       return res
         .status(400)
         .json({ success: false, message: "Passwords are not the same" });
     }
+
+    //pembuatan random pass (hash password)
     const salt = bcrypt.genSaltSync(10);
     const hashPass = bcrypt.hashSync(password, salt);
+
+    //mencari data user berdasarkan nama, jika ada maka akan menghasilkan json 400
     const findName = await User.findOne({ where: { name: name } });
     if (findName) {
       return res
         .status(400)
         .json({ success: false, message: "Name has been used" });
     }
+    
+    //jika tidak, akan menambahkan data user baru, dan tampil json 200
     await User.create({
       name: name,
       password: hashPass,
@@ -41,12 +52,17 @@ const register = async (req, res) => {
 //login
 const login = async (req, res) => {
   try {
+    //mengambil inputan user
     const { name, password } = req.body;
+
+    //validasi inputan user jika tidak diisikan
     if (!name || !password) {
       return res
         .status(400)
         .json({ success: false, message: "Complete your account data" });
     }
+
+    //mencari data akun user berdasarkan nama
     const findAcc = await User.findOne({ where: { name: name } });
     if (!findAcc) {
       return res
@@ -54,13 +70,16 @@ const login = async (req, res) => {
         .json({ success: false, message: "name not found" });
     }
 
+    //jika ditemukan akan mencompare password yang sudah di hash
     bcrypt.compare(password, findAcc.password, async (err, results) => {
+      //jika password salah
       if (err || !results) {
         return res.status(400).json({
           success: false,
           message: "Your account password is incorrect",
         });
       }
+      //jika password tidak salah membuat jwt token
       const id_user = findAcc.id_user;
       const token = jwt.sign(
         {
@@ -71,6 +90,8 @@ const login = async (req, res) => {
           expiresIn: "1w",
         }
       );
+
+      //memanambahkan data token ke database
       await Token_user.create({
         token: token,
         id_user: id_user,

@@ -5,8 +5,6 @@ const middleware = require("../middleware/authentication");
 
 router.post("/user", controllers.register);
 router.post("/login", controllers.login);
-
-//logout
 router.delete("/logout", middleware.verifyToken, controllers.logout);
 
 module.exports = router;

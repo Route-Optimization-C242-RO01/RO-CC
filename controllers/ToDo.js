@@ -10,7 +10,10 @@ const { route } = require("../routes/users");
 //list destination unfinished
 const getAllUnFinish = async (req, res) => {
   try {
+    // mengambil id user yang aktif (login)
     const id_user = req.user.id_user;
+
+    //mengambil seluruh data hasil rute yang berstatus unfinished
     const getAll = await Results.findAll({
       where: {
         status: "unfinished",
@@ -47,11 +50,15 @@ const getAllUnFinish = async (req, res) => {
       ],
       attributes: ["id_results", "status"],
     });
+
+    //validasi jika data ada
     if (getAll.length > 0) {
       return res
         .status(200)
         .json({ success: true, message: "Data available", data: getAll });
     }
+
+    //jika data tidak ada
     return res
       .status(400)
       .json({ success: false, message: "Data not available" });
@@ -131,10 +138,12 @@ const updateToFinished = async (req, res) => {
 };
 
 //list destination finished
-
 const getfinishhistory = async (req, res) => {
   try {
+    //ambil id user yang aktif (login)
     const id_user = req.user.id_user;
+
+    //mengambil semua data hasil rute yang berstatus finished
     const getFinished = await Results.findAll({
       where: {
         status: "finished",
@@ -173,7 +182,7 @@ const getfinishhistory = async (req, res) => {
       order: [["updatedAt", "DESC"]], // Optional: sort by latest finished first
     });
 
-    // Cek apakah update berhasil
+    // jika data ada
     if (getFinished.length > 0) {
       return res.status(200).json({
         success: true,
@@ -181,6 +190,8 @@ const getfinishhistory = async (req, res) => {
         data: getFinished,
       });
     }
+
+    //jika data tidak ada
     return res.status(400).json({
       success: false,
       message: "No finished destinations found",

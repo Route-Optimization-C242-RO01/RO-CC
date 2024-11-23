@@ -14,50 +14,38 @@ module.exports = {
       onDelete: 'CASCADE'
     });
 
-    await queryInterface.changeColumn('Detail_destinations', 'id_destination', {
+    await queryInterface.changeColumn('Results', 'id_user', {
       type: Sequelize.UUID,
       allowNull: false,
       references: {
-        model: 'Destinations', 
-        key: 'id_destination', 
+        model: 'Users',
+        key: 'id_user'
       },
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE'
-    });
+    })
 
-    await queryInterface.changeColumn('Detail_results', 'id_results', {
+    await queryInterface.changeColumn('Routes', 'id_results', {
       type: Sequelize.UUID,
       allowNull: false,
       references: {
-        model: 'Results', 
-        key: 'id_results', 
+        model: 'Results',
+        key: 'id_results'
       },
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE'
-    });
+    })
 
-    await queryInterface.addColumn('Destinations', 'id_user', {
+    await queryInterface.changeColumn('Detail_routes', 'id_route', {
       type: Sequelize.UUID,
       allowNull: false,
       references: {
-        model: 'Users', 
-        key: 'id_user', 
+        model: 'Routes',
+        key: 'id_route'
       },
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE'
-    });
-
-    await queryInterface.changeColumn('Results', 'id_destination', {
-      type: Sequelize.UUID,
-      allowNull: false,
-      references: {
-        model: 'Destinations', 
-        key: 'id_destination', 
-      },
-      onUpdate: 'CASCADE',
-      onDelete: 'CASCADE'
-    });
-
+    })
 
   },
 
@@ -67,21 +55,19 @@ module.exports = {
       allowNull: false,
     });
 
-    await queryInterface.changeColumn('Detail_destinations', 'id_destination', {
+    await queryInterface.changeColumn('Results', 'id_user', {
       type: Sequelize.UUID,
       allowNull: false,
-    });
+    })
 
-    await queryInterface.changeColumn('Detail_results', 'id_results', {
+    await queryInterface.changeColumn('Routes', 'id_results', {
       type: Sequelize.UUID,
       allowNull: false,
-    });
+    })
 
-    await queryInterface.removeColumn('Destinations', 'id_user');
-
-    await queryInterface.changeColumn('Results', 'id_results', {
+    await queryInterface.changeColumn('Detail_routes', 'id_route', {
       type: Sequelize.UUID,
       allowNull: false,
-    });
+    })
   }
 };

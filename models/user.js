@@ -17,9 +17,9 @@ module.exports = (sequelize, DataTypes) => {
         onUpdate: 'CASCADE'
       });
 
-      User.hasMany(models.Destination, {
+      User.hasMany(models.Results, {
         foreignKey: 'id_user',
-        as: 'data_destination_user', 
+        as: 'data_results_user', 
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE'
       });

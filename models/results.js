@@ -10,16 +10,16 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Results.hasMany(models.Detail_results, {
-        foreignKey: 'id_results',
-        as: 'data_detail_results', 
+      Results.belongsTo(models.User, {
+        foreignKey: 'id_user',
+        as: 'data_user_results',
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE'
       });
 
-      Results.belongsTo(models.Destination, {
-        foreignKey: 'id_destination',
-        as: 'data_destination_results',
+      Results.hasMany(models.Route, {
+        foreignKey: 'id_results',
+        as: 'data_route_results', 
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE'
       });
@@ -32,12 +32,20 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: DataTypes.UUIDV4
     },
-    id_destination: {
+    id_user: {
       type: DataTypes.UUID,
+      allowNull: false
+    },
+    title: {
+      type: DataTypes.STRING(100),
       allowNull: false,
     },
+    number_of_vehicles: {
+      type: DataTypes.INTEGER(3),
+      allowNull: false
+    },
     status: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(50),
       allowNull: false,
     },
   }, {

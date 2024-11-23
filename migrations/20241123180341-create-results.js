@@ -1,37 +1,39 @@
 'use strict';
-
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
-    await queryInterface.createTable('Token_users', {
-      id_token: {
+  async up(queryInterface, Sequelize) {
+    await queryInterface.createTable('Results', {
+      id_results: {
         type: Sequelize.UUID,
         primaryKey: true,
         allowNull: false,
         defaultValue: Sequelize.UUIDV4
       },
-      id_user: {
-        type: Sequelize.UUID,
+      title: {
+        type: Sequelize.STRING(100),
         allowNull: false,
       },
-      token: {
-        type: Sequelize.STRING(256),
+      number_of_vehicles: {
+        type: Sequelize.INTEGER(3),
+        allowNull: false
+      },
+      status: {
+        type: Sequelize.STRING(50),
         allowNull: false,
       },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW
+        allowNull: false,
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW
+        allowNull: false,
       }
     });
   },
-
-  async down (queryInterface, Sequelize) {
-    await queryInterface.dropTable('Token_users');
+  async down(queryInterface, Sequelize) {
+    await queryInterface.dropTable('Results');
   }
 };

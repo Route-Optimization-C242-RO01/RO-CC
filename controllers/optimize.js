@@ -5,23 +5,26 @@ const { v4: uuidv4 } = require('uuid');
 //optimasi rute
 const optimize = async (req, res) => {
     try {
+        //inputan user
         const { title, Number_of_vehicles, status, data } = req.body;
 
+        //validasi inputan
         if (!data || !title || !Number_of_vehicles || !status) {
             return res.status(400).json({ success: false, message: 'Please complete your data' });
         }
 
+        //validasi user aktif
         if (!req.user || !req.user.id_user) {
             return res.status(401).json({ success: false, message: 'Unauthorized: User not authenticated' });
         }
 
+        //mengambil data json untuk python API
         const payload = {
             data,
             Number_of_vehicles,
         };
 
-        console.log('Payload:', payload);
-
+        //akses API python
         const response = await axios.post(`${process.env.URL_MODEL}/api/Solution`, payload, {
             headers: {
                 'Content-Type': 'application/json',
@@ -29,16 +32,17 @@ const optimize = async (req, res) => {
         });
 
         const results = response.data;
-        console.log('Respons dari API Python:', JSON.stringify(results, null, 2));
 
         // Validasi respons API Python
         if (!results || !results.Hasil) {
             throw new Error('Invalid response from Python API: "Hasil" is missing');
         }
 
+        //simpan data ke database
         const transaction = await Results.sequelize.transaction();
 
         try {
+            //tambah data results
             const dataResult = await Results.create({
                 id_results: uuidv4(),
                 id_user: req.user.id_user,
@@ -48,10 +52,11 @@ const optimize = async (req, res) => {
             }, { transaction });
 
             const dataRoute = results.Hasil;
+            //tambah data rute dan detail rute dari hasil API python
 
             for (const [vehicles, route] of Object.entries(dataRoute)) {
-                console.log(`Kendaraan: ${vehicles}, Rute:`, route);
 
+                //jika kendaraan tidak ada rute
                 if (!route || route.length === 0) {
                     continue; // Lewati kendaraan 
                 }
@@ -82,6 +87,7 @@ const optimize = async (req, res) => {
 
             await transaction.commit();
 
+            //jika berhasil
             return res.status(200).json({
                 success: true,
                 message: 'Optimize Route Success',
@@ -89,6 +95,7 @@ const optimize = async (req, res) => {
             });
 
         } catch (error) {
+            //jika tidak berhasil
             await transaction.rollback();
             console.error('Database Error:', error.message);
             return res.status(500).json({ success: false, message: 'Error saving data to the database' });

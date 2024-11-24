@@ -5,8 +5,11 @@ const {
 //list destination unfinished
 const getAllUnFinish = async (req,res) => {
   try {
-    const id_user = req.user.id_user
 
+    //ambil id user yang sedang aktif
+    const id_user = req.user.id_user
+    
+    //cari seluruh data yang status = unfinished dan sesuai user
     const getAll = await Results.findAll({
       where: {
         status: 'unfinished',
@@ -29,9 +32,12 @@ const getAllUnFinish = async (req,res) => {
       attributes: ['id_results', 'title', 'number_of_vehicles', 'status']
     })
 
+    //jika data ada
     if (getAll.length > 0) {
       return res.status(200).json({success: true, message: 'Data Available', data: getAll})
     }
+
+    //jika data tidak ada
     return res.status(400).json({success: false, message: 'Data Not Available'})
   } catch (error) {
     console.log(error)

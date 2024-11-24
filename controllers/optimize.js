@@ -18,6 +18,12 @@ const optimize = async (req, res) => {
             return res.status(401).json({ success: false, message: 'Unauthorized: User not authenticated' });
         }
 
+        //cek judul apakah sudah ada atau belum
+        const findTitle = await Results.findOne({where:{title: title}})
+        if (findTitle) {
+            return res.status(400).json({success: false, message: 'Title has been used'})
+        }
+
         //mengambil data json untuk python API
         const payload = {
             data,
@@ -87,13 +93,31 @@ const optimize = async (req, res) => {
 
             await transaction.commit();
 
-            //jika berhasil
-            return res.status(200).json({
-                success: true,
-                message: 'Optimize Route Success',
-                data: results,
-            });
+            const dataSaved = await Results.findOne({
+                where:{
+                    id_results: dataResult.id_results
+                },
+                include: [
+                    {
+                        model: Route,
+                        as: 'data_route_results',
+                        attributes: ['id_results', 'id_route'],
+                        include: [
+                            {
+                                model: Detail_route,
+                                as: 'data_detailRoute_route',
+                                attributes: ['id_detail_route', 'id_route', 'street', 'city', 'province', 'postal_code', 'kg', 'longitude', 'latitude']
+                            }
+                        ]
+                    }
+                ],
+                attributes: ['id_results', 'title', 'number_of_vehicles', 'status']
+            })
 
+            if (dataSaved) {
+                return res.status(200).json({success: true, message: 'Optimize Route Success', data: dataSaved})
+            }
+            return res.status(400).json({success: false, message: 'Data not available'})
         } catch (error) {
             //jika tidak berhasil
             await transaction.rollback();

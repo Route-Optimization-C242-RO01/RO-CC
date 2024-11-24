@@ -37,6 +37,7 @@ const getAllUnFinish = async (req, res) => {
         },
       ],
       attributes: ["id_results", "title", "number_of_vehicles", "status"],
+      order: [["updatedAt", "DESC"]],
     });
 
     //jika data ada
@@ -45,7 +46,7 @@ const getAllUnFinish = async (req, res) => {
         .status(200)
         .json({ success: true, message: "Data Available", data: getAll });
     }
-    
+
     //jika data tidak ada
     return res.status(400).json({success: false, message: 'Data Not Available'})
   } catch (error) {
@@ -146,7 +147,7 @@ const getfinishhistory = async (req, res) => {
           ],
         },
       ],
-      attributes: ["id_results", "title", "number_of_vehicles", "updatedAt"],
+      attributes: ["id_results", "title", "number_of_vehicles", "status"],
       order: [["updatedAt", "DESC"]],
     });
 

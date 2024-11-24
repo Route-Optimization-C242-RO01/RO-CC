@@ -1,44 +1,57 @@
-const {
-  Results,Route, Detail_route,
-} = require("../models");
+const { Results, Route, Detail_route } = require("../models");
 
 //list destination unfinished
-const getAllUnFinish = async (req,res) => {
+const getAllUnFinish = async (req, res) => {
   try {
-    const id_user = req.user.id_user
+    const id_user = req.user.id_user;
 
     const getAll = await Results.findAll({
       where: {
-        status: 'unfinished',
-        id_user: id_user
+        status: "unfinished",
+        id_user: id_user,
       },
       include: [
         {
           model: Route,
-          as: 'data_route_results',
-          attributes: ['id_results','id_route'],
+          as: "data_route_results",
+          attributes: ["id_results", "id_route"],
           include: [
             {
               model: Detail_route,
-              as: 'data_detailRoute_route',
-              attributes: ['id_detail_route', 'id_route', 'street', 'city', 'province','postal_code', 'kg', 'longitude', 'latitude']
-            }
-          ]
-        }
+              as: "data_detailRoute_route",
+              attributes: [
+                "id_detail_route",
+                "id_route",
+                "street",
+                "city",
+                "province",
+                "postal_code",
+                "kg",
+                "longitude",
+                "latitude",
+              ],
+            },
+          ],
+        },
       ],
-      attributes: ['id_results', 'title', 'number_of_vehicles', 'status']
-    })
+      attributes: ["id_results", "title", "number_of_vehicles", "status"],
+    });
 
     if (getAll.length > 0) {
-      return res.status(200).json({success: true, message: 'Data Available', data: getAll})
+      return res
+        .status(200)
+        .json({ success: true, message: "Data Available", data: getAll });
     }
-    return res.status(400).json({success: false, message: 'Data Not Available'})
+    return res
+      .status(400)
+      .json({ success: false, message: "Data Not Available" });
   } catch (error) {
-    console.log(error)
-    return res.status(500).json({success: false, message: 'Kesalahan Server'})
+    console.log(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Kesalahan Server" });
   }
-}
-
+};
 
 //update destination to finished
 const updateToFinished = async (req, res) => {
@@ -50,16 +63,9 @@ const updateToFinished = async (req, res) => {
     const existingResult = await Results.findOne({
       where: {
         id_results: id_results,
+        id_user: id_user,
+        status: "unfinished",
       },
-      include: [
-        {
-          model: Destination,
-          as: "data_destination_results",
-          where: {
-            id_user: id_user,
-          },
-        },
-      ],
     });
 
     // Jika results tidak ditemukan
@@ -70,36 +76,28 @@ const updateToFinished = async (req, res) => {
       });
     }
 
-    // Jika status sudah finished
-    if (existingResult.status === "finished") {
-      return res.status(400).json({
-        success: false,
-        message: "Results is already finished",
-      });
-    }
-
-    // Update status menjadi finished
-    const updatedResult = await Results.update(
+    // update status
+    const [updatedRows] = await Results.update(
       { status: "finished" },
       {
         where: {
           id_results: id_results,
+          id_user: id_user,
         },
       }
     );
 
-    // Cek apakah update berhasil
-    if (updatedResult) {
+    if (updatedRows > 0) {
       return res.status(200).json({
         success: true,
-        message: "Results updated to finished successfully",
-      });
-    } else {
-      return res.status(400).json({
-        success: false,
-        message: "Failed to update results",
+        message: "Results has been updated to finished",
       });
     }
+
+    return res.status(400).json({
+      success: false,
+      message: "Failed to update results",
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -119,54 +117,49 @@ const getfinishhistory = async (req, res) => {
     const getFinished = await Results.findAll({
       where: {
         status: "finished",
+        id_user: id_user,
       },
       include: [
         {
-          model: Destination,
-          as: "data_destination_results",
-          where: {
-            id_user: id_user,
-          },
+          model: Route,
+          as: "data_route_results",
+          attributes: ["id_results", "id_route"],
           include: [
             {
-              model: Detail_destination,
-              as: "data_detail_destination",
+              model: Detail_route,
+              as: "data_detailRoute_route",
               attributes: [
-                "id_detail_destination",
-                "id_destination",
+                "id_detail_route",
+                "id_route",
                 "street",
                 "city",
                 "province",
                 "postal_code",
                 "kg",
+                "longitude",
+                "latitude",
               ],
             },
           ],
-          attributes: ["id_destination"],
-        },
-        {
-          model: Detail_results,
-          as: "data_detail_results",
-          attributes: ["id_detail_results", "longitude", "latitude"],
         },
       ],
-      attributes: ["id_results", "status"],
-      order: [["updatedAt", "DESC"]], // Optional: sort by latest finished first
+      attributes: ["id_results", "title", "number_of_vehicles", "updatedAt"],
+      order: [["updatedAt", "DESC"]],
     });
 
-    // jika data ada
+    //jika data ditemukan
     if (getFinished.length > 0) {
       return res.status(200).json({
         success: true,
-        message: "Finished destinations found",
+        message: "Data Available",
         data: getFinished,
       });
     }
 
-    //jika data tidak ada
+    //jika data tidak ditemukan
     return res.status(400).json({
       success: false,
-      message: "No finished destinations found",
+      message: "Data Not Available",
     });
   } catch (error) {
     console.log(error);

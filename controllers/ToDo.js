@@ -68,7 +68,6 @@ const updateToFinished = async (req, res) => {
       where: {
         id_results: id_results,
         id_user: id_user,
-        status: "unfinished",
       },
     });
 
@@ -78,6 +77,10 @@ const updateToFinished = async (req, res) => {
         success: false,
         message: "Results not found or you don't have permission",
       });
+    }
+
+    if (existingResult.status == 'finished') {
+      return res.status(400).json({success: false, message: 'Data status is finished'})
     }
 
     // update status

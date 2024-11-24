@@ -32,6 +32,7 @@ DB_PASSWORD =
 DB_NAME = 
 DB_HOST =
 PORT = 
+URL_MODEL = 
 ```
 
 ### 4. Create Database

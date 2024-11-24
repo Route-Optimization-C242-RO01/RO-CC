@@ -3,8 +3,10 @@ const { Results, Route, Detail_route } = require("../models");
 //list destination unfinished
 const getAllUnFinish = async (req, res) => {
   try {
+    //get user yang aktif
     const id_user = req.user.id_user
 
+    //cari semua data result yang status unfinished berdasar user
     const getAll = await Results.findAll({
       where: {
         status: "unfinished",
@@ -43,6 +45,8 @@ const getAllUnFinish = async (req, res) => {
         .status(200)
         .json({ success: true, message: "Data Available", data: getAll });
     }
+    
+    //jika data tidak ada
     return res.status(400).json({success: false, message: 'Data Not Available'})
   } catch (error) {
     console.log(error);

@@ -43,11 +43,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     postal_code: {
       type: DataTypes.STRING(20),
-      allowNull: false
+      allowNull: true
     },
     kg: {
       type: DataTypes.DECIMAL(10,5),
-      allowNull: false
+      allowNull: true
     },
     longitude: {
       type: DataTypes.DECIMAL(10,8),

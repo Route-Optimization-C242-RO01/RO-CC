@@ -1,5 +1,7 @@
 {
-    "Number_of_vehicles": 10,
+    "Number_of_vehicles": 4,
+    "title": "Perjalanan Minggu 10",
+    "status": "unfinished",
     "data": [
         {
             "Street": "Jl. Merdeka No.1",

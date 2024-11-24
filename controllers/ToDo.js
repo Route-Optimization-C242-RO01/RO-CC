@@ -1,72 +1,44 @@
-const { Router } = require("express");
 const {
-  Results,
-  Destination,
-  Detail_results,
-  Detail_destination,
+  Results,Route, Detail_route,
 } = require("../models");
-const { route } = require("../routes/users");
 
 //list destination unfinished
-const getAllUnFinish = async (req, res) => {
+const getAllUnFinish = async (req,res) => {
   try {
-    // mengambil id user yang aktif (login)
-    const id_user = req.user.id_user;
+    const id_user = req.user.id_user
 
-    //mengambil seluruh data hasil rute yang berstatus unfinished
     const getAll = await Results.findAll({
       where: {
-        status: "unfinished",
+        status: 'unfinished',
+        id_user: id_user
       },
       include: [
         {
-          model: Destination,
-          as: "data_destination_results",
-          where: {
-            id_user: id_user,
-          },
+          model: Route,
+          as: 'data_route_results',
+          attributes: ['id_results','id_route'],
           include: [
             {
-              model: Detail_destination,
-              as: "data_detail_destination",
-              attributes: [
-                "id_detail_destination",
-                "id_destination",
-                "street",
-                "city",
-                "province",
-                "postal_code",
-                "kg",
-              ],
-            },
-          ],
-          attributes: ["id_destination"],
-        },
-        {
-          model: Detail_results,
-          as: "data_detail_results",
-          attributes: ["id_detail_results", "longitude", "latitude"],
-        },
+              model: Detail_route,
+              as: 'data_detailRoute_route',
+              attributes: ['id_detail_route', 'id_route', 'street', 'city', 'province','postal_code', 'kg', 'longitude', 'latitude']
+            }
+          ]
+        }
       ],
-      attributes: ["id_results", "status"],
-    });
+      attributes: ['id_results', 'title', 'number_of_vehicles', 'status']
+    })
 
-    //validasi jika data ada
     if (getAll.length > 0) {
-      return res
-        .status(200)
-        .json({ success: true, message: "Data available", data: getAll });
+      return res.status(200).json({success: true, message: 'Data Available', data: getAll})
     }
-
-    //jika data tidak ada
-    return res
-      .status(400)
-      .json({ success: false, message: "Data not available" });
+    return res.status(400).json({success: false, message: 'Data Not Available'})
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({ success: false, message: "Server Error" });
+    console.log(error)
+    return res.status(500).json({success: false, message: 'Kesalahan Server'})
   }
-};
+}
+
 
 //update destination to finished
 const updateToFinished = async (req, res) => {

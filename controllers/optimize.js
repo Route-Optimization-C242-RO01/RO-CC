@@ -10,18 +10,18 @@ const optimize = async (req, res) => {
 
         //validasi inputan
         if (!data || !title || !Number_of_vehicles || !status) {
-            return res.status(400).json({ success: false, message: 'Please complete your data' });
+            return res.status(400).json({code:400, success: false, message: 'Please complete your data' });
         }
 
         //validasi user aktif
         if (!req.user || !req.user.id_user) {
-            return res.status(401).json({ success: false, message: 'Unauthorized: User not authenticated' });
+            return res.status(401).json({code:401, success: false, message: 'Unauthorized: User not authenticated' });
         }
 
         //cek judul apakah sudah ada atau belum
         const findTitle = await Results.findOne({where:{title: title}})
         if (findTitle) {
-            return res.status(400).json({success: false, message: 'Title has been used'})
+            return res.status(400).json({code: 400, success: false, message: 'Title has been used'})
         }
 
         //mengambil data json untuk python API
@@ -115,18 +115,18 @@ const optimize = async (req, res) => {
             })
 
             if (dataSaved) {
-                return res.status(200).json({success: true, message: 'Optimize Route Success', data: dataSaved})
+                return res.status(200).json({code:200, success: true, message: 'Optimize Route Success', data: dataSaved})
             }
-            return res.status(400).json({success: false, message: 'Data not available'})
+            return res.status(400).json({code: 400, success: false, message: 'Data not available'})
         } catch (error) {
             //jika tidak berhasil
             await transaction.rollback();
             console.error('Database Error:', error.message);
-            return res.status(500).json({ success: false, message: 'Error saving data to the database' });
+            return res.status(500).json({code:500, success: false, message: 'Error saving data to the database' });
         }
     } catch (error) {
         console.error('Error:', error.message);
-        return res.status(500).json({ success: false, message: 'Server Error' });
+        return res.status(500).json({code:500, success: false, message: 'Server Error' });
     }
 };
 

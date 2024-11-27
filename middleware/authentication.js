@@ -10,6 +10,7 @@ const verifyToken = (req, res, next) => {
         //jika tidak ada token
         if (!authHeader) {
             res.status(404).json({
+                code:404,
                 success: false,
                 message: 'Enter the token first'
             })
@@ -22,21 +23,21 @@ const verifyToken = (req, res, next) => {
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, user) => {
             if (err) {
                 console.error(err);
-                return res.status(401).json({ success: false, message: err });
+                return res.status(401).json({code:401, success: false, message: err });
             }
 
             //validasi apakah token ada atau tidak pada database
             const findToken = await Token_user.findOne({where: {token}})
             //jika tidak ada
             if (!findToken) {
-                return res.status(401).json({ success: false, message: "There is no token or have logged out previously" });
+                return res.status(401).json({code:401, success: false, message: "There is no token or have logged out previously" });
             }
 
             //jika ada
             const date = new Date()
             const tanggal = date.getDate()
             if (tanggal > findToken.expires_at) {
-                return res.status(400).json({success: false, message: 'Token Has Expired'})
+                return res.status(400).json({code:400, success: false, message: 'Token Has Expired'})
             } else {
                 req.user = user;
                 next();
@@ -46,6 +47,7 @@ const verifyToken = (req, res, next) => {
     } catch (error) {
         console.error(error)
         res.status(404).json({
+            code:404,
             success: false,
             message: 'Session Token Has Expired'
         })

@@ -44,16 +44,16 @@ const getAllUnFinish = async (req, res) => {
     if (getAll.length > 0) {
       return res
         .status(200)
-        .json({ success: true, message: "Data Available", data: getAll });
+        .json({code: 200, success: true, message: "Data Available", data: getAll });
     }
 
     //jika data tidak ada
-    return res.status(400).json({success: false, message: 'Data Not Available'})
+    return res.status(400).json({code: 400, success: false, message: 'Data Not Available'})
   } catch (error) {
     console.log(error);
     return res
       .status(500)
-      .json({ success: false, message: "Kesalahan Server" });
+      .json({code:500, success: false, message: "Kesalahan Server" });
   }
 };
 
@@ -74,13 +74,14 @@ const updateToFinished = async (req, res) => {
     // Jika results tidak ditemukan
     if (!existingResult) {
       return res.status(404).json({
+        code: 404,
         success: false,
         message: "Results not found or you don't have permission",
       });
     }
 
     if (existingResult.status == 'finished') {
-      return res.status(400).json({success: false, message: 'Data status is finished'})
+      return res.status(400).json({code:400, success: false, message: 'Data status is finished'})
     }
 
     // update status
@@ -96,18 +97,21 @@ const updateToFinished = async (req, res) => {
 
     if (updatedRows > 0) {
       return res.status(200).json({
+        code: 200,
         success: true,
         message: "Results has been updated to finished",
       });
     }
 
     return res.status(400).json({
+      code: 400,
       success: false,
       message: "Failed to update results",
     });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
+      code: 500,
       success: false,
       message: "Server Error",
     });
@@ -157,6 +161,7 @@ const getfinishhistory = async (req, res) => {
     //jika data ditemukan
     if (getFinished.length > 0) {
       return res.status(200).json({
+        code: 200,
         success: true,
         message: "Data Available",
         data: getFinished,
@@ -165,12 +170,14 @@ const getfinishhistory = async (req, res) => {
 
     //jika data tidak ditemukan
     return res.status(400).json({
+      code: 400,
       success: false,
       message: "Data Not Available",
     });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
+      code: 500,
       success: false,
       message: "Server Error",
     });

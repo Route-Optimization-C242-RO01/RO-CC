@@ -12,14 +12,14 @@ const register = async (req, res) => {
     if (!name || !password || !retype_pass) {
       return res
         .status(400)
-        .json({ success: false, message: "Complete your account data" });
+        .json({code: 400, success: false, message: "Complete your account data" });
     }
 
     //validasi jika password, dengan konfirmasi password tidak sama
     if (password != retype_pass) {
       return res
         .status(400)
-        .json({ success: false, message: "Passwords are not the same" });
+        .json({code:400, success: false, message: "Passwords are not the same" });
     }
 
     //pembuatan random pass (hash password)
@@ -31,7 +31,7 @@ const register = async (req, res) => {
     if (findName) {
       return res
         .status(400)
-        .json({ success: false, message: "Name has been used" });
+        .json({code: 400, success: false, message: "Name has been used" });
     }
     
     //jika tidak, akan menambahkan data user baru, dan tampil json 200
@@ -40,12 +40,13 @@ const register = async (req, res) => {
       password: hashPass,
     });
     return res.status(200).json({
+      code: 200,
       success: true,
       message: "Account has been successfully registered",
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ success: false, message: "Server Error" });
+    return res.status(500).json({code:500, success: false, message: "Server Error" });
   }
 };
 
@@ -59,7 +60,7 @@ const login = async (req, res) => {
     if (!name || !password) {
       return res
         .status(400)
-        .json({ success: false, message: "Complete your account data" });
+        .json({code:400, success: false, message: "Complete your account data" });
     }
 
     //mencari data akun user berdasarkan nama
@@ -67,7 +68,7 @@ const login = async (req, res) => {
     if (!findAcc) {
       return res
         .status(400)
-        .json({ success: false, message: "name not found" });
+        .json({code:400, success: false, message: "name not found" });
     }
 
     //jika ditemukan akan mencompare password yang sudah di hash
@@ -75,6 +76,7 @@ const login = async (req, res) => {
       //jika password salah
       if (err || !results) {
         return res.status(400).json({
+          code:400,
           success: false,
           message: "Your account password is incorrect",
         });
@@ -97,6 +99,7 @@ const login = async (req, res) => {
         id_user: id_user,
       });
       return res.status(200).json({
+        code:200,
         success: true,
         message: "Login berhasil",
         token: token,
@@ -105,7 +108,7 @@ const login = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ success: false, message: "Server Error" });
+    return res.status(500).json({code:500, success: false, message: "Server Error" });
   }
 };
 
@@ -115,7 +118,7 @@ const logout = async (req, res) => {
     if (!req.user) {
       return res
         .status(400)
-        .json({ success: false, message: "User not authenticated" });
+        .json({code:400, success: false, message: "User not authenticated" });
     }
 
     // Find and delete the token
@@ -125,14 +128,14 @@ const logout = async (req, res) => {
     if (!tokenRecord) {
       return res
         .status(404)
-        .json({ success: false, message: "Token not found" });
+        .json({code:404, success: false, message: "Token not found" });
     }
 
     await tokenRecord.destroy();
-    res.status(200).json({ success: true, message: "Logout Success" });
+    res.status(200).json({code:200, success: true, message: "Logout Success" });
   } catch (error) {
     console.error("Logout error:", error); // Log the error
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({code:500, success: false, message: error.message });
   }
 };
 

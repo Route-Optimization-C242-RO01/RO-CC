@@ -81,6 +81,7 @@ const optimize = async (req, res) => {
                         id_detail_route: uuidv4(),
                         id_route: addRoute.id_route,
                         street: detailRoute.street,
+                        demand: detailRoute.demand,
                         city: detailRoute.city,
                         province: detailRoute.province,
                         postal_code: detailRoute.postal_code || null,

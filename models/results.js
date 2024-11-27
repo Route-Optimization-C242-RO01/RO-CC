@@ -48,6 +48,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(50),
       allowNull: false,
     },
+    total_distance:{
+      type: DataTypes.FLOAT(10,2),
+      allowNull: false,
+    }
   }, {
     sequelize,
     modelName: 'Results',

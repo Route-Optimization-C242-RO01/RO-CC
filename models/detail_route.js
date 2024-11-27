@@ -57,6 +57,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DECIMAL(9,6),
       allowNull: false
     },
+    demand:{
+      type: DataTypes.INTEGER(3),
+      allowNull: false
+    }
   }, {
     sequelize,
     modelName: 'Detail_route',

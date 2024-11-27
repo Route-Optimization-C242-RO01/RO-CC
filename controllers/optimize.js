@@ -54,6 +54,7 @@ const optimize = async (req, res) => {
                 id_user: req.user.id_user,
                 title,
                 number_of_vehicles: Number_of_vehicles,
+                total_distance: results.Total_Jarak_Ditempuh,
                 status,
             }, { transaction });
 
@@ -107,12 +108,12 @@ const optimize = async (req, res) => {
                             {
                                 model: Detail_route,
                                 as: 'data_detailRoute_route',
-                                attributes: ['id_detail_route', 'id_route', 'street', 'city', 'province', 'postal_code', 'kg', 'longitude', 'latitude']
+                                attributes: ['id_detail_route', 'id_route', 'street', 'city', 'province', 'postal_code', 'kg', 'longitude', 'latitude', 'demand']
                             }
                         ]
                     }
                 ],
-                attributes: ['id_results', 'title', 'number_of_vehicles', 'status']
+                attributes: ['id_results', 'title', 'number_of_vehicles', 'status', 'total_distance']
             })
 
             if (dataSaved) {

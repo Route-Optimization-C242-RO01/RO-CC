@@ -35,6 +35,11 @@ module.exports = (sequelize, DataTypes) => {
     id_results: {
       type: DataTypes.UUID,
       allowNull: false
+    },
+    vehicle_sequence:{
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0, 
     }
   }, {
     sequelize,

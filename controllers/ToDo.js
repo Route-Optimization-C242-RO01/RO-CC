@@ -3,10 +3,10 @@ const { Results, Route, Detail_route } = require("../models");
 //list destination unfinished
 const getAllUnFinish = async (req, res) => {
   try {
-    //get user yang aktif
-    const id_user = req.user.id_user
+    //ambil id user yang aktif
+    const id_user = req.user.id_user;
 
-    //cari semua data result yang status unfinished berdasar user
+    //get seluruh data results berdasar status dan id user
     const getAll = await Results.findAll({
       where: {
         status: "unfinished",
@@ -16,7 +16,7 @@ const getAllUnFinish = async (req, res) => {
         {
           model: Route,
           as: "data_route_results",
-          attributes: ["id_results", "id_route"],
+          attributes: ["id_results", "id_route", "vehicle_sequence"],
           include: [
             {
               model: Detail_route,
@@ -28,34 +28,38 @@ const getAllUnFinish = async (req, res) => {
                 "city",
                 "province",
                 "postal_code",
-                "kg",
                 "longitude",
                 "latitude",
+                "demand",
+                "sequence",
               ],
             },
           ],
         },
       ],
-      attributes: ["id_results", "title", "number_of_vehicles", "status"],
-      order: [["updatedAt", "DESC"]],
+      attributes: ["id_results", "title", "number_of_vehicles", "status", "total_distance"],
+      order: [
+        ["updatedAt", "DESC"], 
+        [{ model: Route, as: "data_route_results" }, "vehicle_sequence", "ASC"], 
+        [{ model: Route, as: "data_route_results" }, { model: Detail_route, as: "data_detailRoute_route" }, "sequence", "ASC"],
+      ],
     });
 
     //jika data ada
     if (getAll.length > 0) {
       return res
         .status(200)
-        .json({code: 200, success: true, message: "Data Available", data: getAll });
+        .json({ code: 200, success: true, message: "Data Available", data: getAll });
     }
 
     //jika data tidak ada
-    return res.status(400).json({code: 400, success: false, message: 'Data Not Available'})
+    return res.status(400).json({ code: 400, success: false, message: "Data Not Available" });
   } catch (error) {
-    console.log(error);
-    return res
-      .status(500)
-      .json({code:500, success: false, message: "Kesalahan Server" });
+    console.error(error);
+    return res.status(500).json({ code: 500, success: false, message: "Kesalahan Server" });
   }
 };
+
 
 //update destination to finished
 const updateToFinished = async (req, res) => {
@@ -134,7 +138,7 @@ const getfinishhistory = async (req, res) => {
         {
           model: Route,
           as: "data_route_results",
-          attributes: ["id_results", "id_route"],
+          attributes: ["id_results", "id_route", "vehicle_sequence"],
           include: [
             {
               model: Detail_route,
@@ -146,16 +150,21 @@ const getfinishhistory = async (req, res) => {
                 "city",
                 "province",
                 "postal_code",
-                "kg",
                 "longitude",
                 "latitude",
+                "demand",
+                "sequence"
               ],
             },
           ],
         },
       ],
-      attributes: ["id_results", "title", "number_of_vehicles", "status"],
-      order: [["updatedAt", "DESC"]],
+      attributes: ["id_results", "title", "number_of_vehicles", "status", "total_distance"],
+      order: [
+        ["updatedAt", "DESC"], 
+        [{ model: Route, as: "data_route_results" }, "vehicle_sequence", "ASC"], 
+        [{ model: Route, as: "data_route_results" }, { model: Detail_route, as: "data_detailRoute_route" }, "sequence", "ASC"],
+      ],
     });
 
     //jika data ditemukan
